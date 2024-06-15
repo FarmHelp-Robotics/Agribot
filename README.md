@@ -1,6 +1,7 @@
 # agribot_src
 Collection of packages for agri-robotics. Developed and testing with ROS1 Melodic.
 
+## Installation
 ```bash
 mkdir -p agribot_ws/src && cd agribot_ws # Skip this if you already have a workspace
 # from root of the workspace
