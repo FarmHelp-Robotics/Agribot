@@ -1,0 +1,2 @@
+* chimera_sim
+Package for simulation and testing out the robot.
