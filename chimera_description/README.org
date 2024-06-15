@@ -1,0 +1,18 @@
+* chimera_description
+A package that combines the Elephant Robotics' MyCobot 280 Arduino (https://github.com/elephantrobotics/mycobot_ros) with Yahboom's Transbot Jetson (https://github.com/YahboomTechnology/Transbot_Jetson).
+
+After putting this into your workspace,
+#+BEGIN_SRC bash
+  rosdep install --from-paths src --ignore-src -r -y
+  catkin_make
+
+  roslaunch chimera_description display.launch
+#+END_SRC
+
+
+#+BEGIN_HTML
+<img src="screenshot.png"/>
+#+END_HTML
+
+** TODO Adding inertia and mass properties to each of the links, for more accurate physics simulation
+
