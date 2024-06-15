@@ -1,0 +1,62 @@
+#!/usr/bin/env python2
+
+import rospy
+from sensor_msgs.msg import Image, CameraInfo
+from cv_bridge import CvBridge, CvBridgeError
+import cv2 
+import numpy as np 
+
+class DepthSelectorold:
+	def __init__(self):
+		self.bridge = CvBridge()
+		self.depth_image = None
+		self.camera_image = None 
+		self.camera_matrix = None
+		
+		rospy.Subscriber("/camera/depth/image_raw", Image, self.depth_callback)
+		rospy.Subscriber("/camera/rgb/image_raw", Image, self.camera_callback)
+		rospy.Subscriber("/camera/rgb/camera_info", CameraInfo, self.camera_info_callback)
+
+		cv2.namedWindow("Camera Image")
+		cv2.setMouseCallback("Camera Image", self.mouse_callback)
+
+		self.selected_point = None 
+	
+	def depth_callback(self, data):
+		try:
+			self.depth_image = self.bridge.imgmsg_to_cv2(data)
+		except CvBridgeError as e:
+			rospy.logerr("cvbridge errorrrr 0_0 :{0}".format(e))
+	def camera_callback(self, data):
+		try:
+			self.camera_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
+			if self.camera_image is not None:
+				if self.selected_point is not None and self.depth_image is not None:
+					x, y = self.selected_point 
+					depth = self.depth_image[y, x]
+					cv2.circle(self.camera_image, (x, y), 5, (0, 0, 255), -1 )
+					cv2.putText(self.camera_image, "Depth{:.2f}".format(depth), (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+				cv2.imshow("Camera Image", self.camera_image)
+				cv2.waitKey(1)
+		except CvBridgeError as e:
+			rospy.logerr("CvBridge Error: {0}".format(e))
+	
+	def camera_info_callback(self, info):
+		self.camera_matrix = np.array(data.K).reshape(3,3)
+		rospy.loginfo("Camera intrinsic matrix: \n{}".format(self.camera_matrix))
+		
+	
+	def mouse_callback(self, event, x, y, flags, param):
+		if event == cv2.EVENT_LBUTTONDOWN:
+			self.selected_point = (x, y)
+	def cleanup(self):
+		cv2.destroyAllWindows()
+
+if __name__ == '__main__':
+	rospy.init_node('depth_selector1', anonymous = True)
+	ds = DepthSelectorold()
+	try:
+		rospy.spin()
+	except KeyboardInterrupt:
+		rospy.loginfo("Shutting down")
+	cv2.destroyAllWindows()

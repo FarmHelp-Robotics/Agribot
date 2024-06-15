@@ -1,0 +1,10 @@
+<launch>
+    <!-- Launch the camera driver node -->
+    <include file="$(find astra_camera)/launch/astrapro.launch"/>
+
+    <!-- Launch the depth selector node -->
+    <node name="depth_selector1" pkg="depth_selector" type="depth_selector1.py" output="screen">
+        <!-- Remap the image topics if necessary -->
+    </node>
+</launch>
+

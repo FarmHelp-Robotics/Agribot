@@ -1,0 +1,15 @@
+<launch>
+  <!-- Start the tomato detector node -->
+  <node name="tomato_detector" pkg="detect_tomato" type="tomato_detector.py" output="screen">
+    <param name="image_topic" value="/camera/rgb/image_raw" />
+  </node>
+  
+  <!-- Launch the depth selector node -->
+  <node name="depth_selector" pkg="depth_selector" type="depth_selector_publisher.py" output="screen">
+    <param name="depth_topic" value="/camera/depth/image_raw" />
+    <param name="info_topic" value="/camera/depth/camera_info" />
+  </node>
+
+  <node name="go_spray_plants" pkg="go_spray_plants" type="go_spray_plants" output="screen">
+  </node>
+</launch>

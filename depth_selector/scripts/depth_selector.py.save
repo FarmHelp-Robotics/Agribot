@@ -1,0 +1,29 @@
+import rospy
+from sensor_msgs.msg import Image 
+from cv_bridge import CvBridge, CvBridgeError
+import cv2 
+import numpy as np 
+
+class DepthSelector:
+	def __init__(self):
+		self.bridge = CvBridge()
+		self.depth_image = None
+		self.camera_image = None 
+		
+		rospy.Subscriber("/camera/depth/image_raw", Image, self.depth_callback)
+		rospy.Subscriber("/camera/rgb/image_raw", Image, self.camera_callback)
+
+		cv2.namedWindow("Camera Image")
+		cv2.setMouseCallback("Camera Image", self.mouse_callback)
+
+		self.selected_point = None 
+	
+	def depth_callback(self, data):
+		try:
+			self.depth_image = self.bridge.imgmsg_to_cv2(data, desired_encoding = "32FC1")
+		except CvBridgeError as e:
+			rospy.logerr("cvbridge errorrrr 0_0 :{0}".format(e))
+	def camera_callback(self, data):
+		try:
+			self.camera_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
+			if self.camera_image is not None:				
