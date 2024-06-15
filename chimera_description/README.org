@@ -14,5 +14,3 @@ After putting this into your workspace,
 <img src="screenshot.png"/>
 #+END_HTML
 
-** TODO Adding inertia and mass properties to each of the links, for more accurate physics simulation
-
