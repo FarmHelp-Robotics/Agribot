@@ -2,29 +2,26 @@
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="chimera" >
   <xacro:property name="width" value=".2" />
 
-  <!-- Copied from https://github.com/elephantrobotics/mycobot_ros/pull/47/files#diff-376dbc4a3acb2831ff5adea9612541636ce126703a5f9477713e5dd388a4e196 -->
-  <xacro:macro name="box_inertial" params="mass x y z">
+  <!-- Copied from https://github.com/elephantrobotics/mycobot_ros/pull/47/files#diff-376dbc4a3acb2831ff5adea9612541636ce126703a5f9477713e5dd388a4e196. Can be found here: https://en.wikipedia.org/wiki/List_of_moments_of_inertia#List_of_3D_inertia_tensors as well.-->
+  <xacro:macro name="box_inertial" params="m w d h">
     <inertial>
-      <mass value="${mass}" />
-      <inertia ixx="${mass*(y*y+z*z)/12}" ixy = "0" ixz = "0"
-      iyy="${mass*(z*z+x*x)/12}" iyz = "0"
-      izz="${mass*(x*x+y*y)/12}" />
+      <mass value="${m}" />
+      <inertia ixx="${m*(h*h + d*d)/12}" ixy = "0" ixz = "0"
+      iyy="${m*(h*h+w*w)/12}" iyz = "0"
+      izz="${m*(w*w+d*d)/12}" />
     </inertial>
   </xacro:macro>
 
-  <xacro:macro name="cylinder_inertia" params="mass r h">
-    <inertia ixx="${mass*(3*r*r+h*h)/12}" ixy="0" ixz="0"
-      iyy="${mass*(3*r*r+h*h)/12}" iyz="0"
-      izz="${mass*r*r/2}" />
-  </xacro:macro>
-
-  <xacro:macro name="def_inertial" params="mass">
+  <xacro:macro name="hcylinder_inertial" params="m r h">
     <inertial>
-      <mass value="${mass}" />
-      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+      <mass value="${m}" />
+      <inertia ixx="${m*(3*(r*r)+h*h)/12}" ixy = "0" ixz = "0"
+      iyy="${m*(3*(r*r)+h*h)/12}" iyz = "0"
+      izz="${m*(r*r)/12}" />
     </inertial>
   </xacro:macro>
   
+  <!-- The joints are modelled as a cylinder, that encompasses the whole joint. -->
   <link name="base_footprint"/>
   <link name="base_link">
     <visual>
@@ -41,28 +38,25 @@
 	<mesh filename="package://chimera_description/meshes/base_link_collision.stl"/>
       </geometry>
     </collision>
-    <xacro:box_inertial mass="5.0" x="0.30" y="0.24" z="0.10"/>
+    <xacro:box_inertial m="5.5" w="0.24" d="0.3" h="0.10"/>
   </link>
-  
+
   <link name="joint1">
     <visual>
       <geometry>
-	     <!--- 0.0 0 -0.04  1.5708 3.14159-->
        <mesh filename="package://chimera_description/meshes/joint1.dae"/>
       </geometry>
       <origin xyz = "0.0 0 0 " rpy = " 0 0 3.14159"/>
     </visual>
     <collision>
       <geometry>
-	     <!--- 0.0 0 -0.04  1.5708 3.14159-->
        <mesh filename="package://chimera_description/meshes/joint1.dae"/>
         </geometry>
         <origin xyz = "0.0 0 0 " rpy = " 0 0 3.14159"/>
     </collision>
-    <xacro:def_inertial mass="0.5"/>
+    <xacro:hcylinder_inertial m="1.0" r="0.045" h="0.073"/>
   </link>
 
- 
   <link name="joint2">
     <visual>
       <geometry>
@@ -76,10 +70,10 @@
       </geometry>
       <origin xyz = "0.0 0 -0.06096 " rpy = " 0 0 -1.5708"/>
     </collision>
-    <xacro:def_inertial mass="0.3"/>
+    <xacro:hcylinder_inertial m="0.1" r="0.025" h="0.087"/>
   </link>
 
-
+  <!--
   <link name="joint3">
     <visual>
       <geometry>
@@ -93,9 +87,8 @@
       </geometry>
       <origin xyz = "0.0 0 0.03256 " rpy = " 0 -1.5708 0"/>
     </collision>
-    <xacro:def_inertial mass="0.2"/>
+    <xacro:hcylinder_inertial m="0.2" r="0.03" h="0.155"/>
   </link>
-
 
   <link name="joint4">
     <visual>
@@ -110,9 +103,8 @@
       </geometry>
       <origin xyz = "0.0 0 0.03056 " rpy = " 0 -1.5708 0"/>
     </collision>
-    <xacro:def_inertial mass="0.2"/>
+    <xacro:hcylinder_inertial m="0.18" r="0.0275" h="0.136"/>
   </link>
-
 
   <link name="joint5">
     <visual>
@@ -127,9 +119,8 @@
       </geometry>
       <origin xyz = "0.0 0 -0.03356 " rpy = " -1.5708 0 0"/>
     </collision>
-    <xacro:def_inertial mass="0.25"/>
+    <xacro:hcylinder_inertial m="0.1" r="0.0275" h="0.06"/>
   </link>
-
 
   <link name="joint6">
     <visual>
@@ -144,9 +135,8 @@
       </geometry>
     <origin xyz = "0 0.00 -0.038 " rpy = " 0 0 0"/>
     </collision>
-    <xacro:def_inertial mass="0.1"/>
+    <xacro:hcylinder_inertial m="0.1" r="0.018" h="0.06"/>
   </link>
-
 
   <link name="joint6_flange">
     <visual>
@@ -161,84 +151,21 @@
       </geometry>
     <origin xyz = "0.0 0 -0.012 " rpy = " 0 0 0"/>
     </collision>
-    <xacro:def_inertial mass="0.05"/>
+    <xacro:hcylinder_inertial m="0.05" r="0.018" h="0.02"/>
   </link>
-
-  <link name="left_front_wheel">
-    <!--
-    <visual>
-      <origin rpy="1.57075 0 0" xyz="0 0 0"/>
-      <geometry>
-        <cylinder length="0.05" radius="0.05"/>
-      </geometry>
-      <material name="black"/>
-    </visual>
-    -->
-    <xacro:def_inertial mass="0.1"/>
-  </link>
-
-  <link name="left_mid_wheel">
-    <!--
-    <visual>
-      <origin rpy="1.57075 0 0" xyz="0 0 0"/>
-      <geometry>
-        <cylinder length="0.05" radius="0.05"/>
-      </geometry>
-      <material name="black"/>
-    </visual>
-    -->
-    <xacro:def_inertial mass="0.1"/>
-  </link>
+-->
+  <joint name="base_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0.0 0.0 0.08" rpy="0 0 0"/>
+  </joint>
   
-  <link name="left_back_wheel">
-    <!--
-    <visual>
-      <origin rpy="1.57075 0 0" xyz="0 0 0"/>
-      <geometry>
-        <cylinder length="0.05" radius="0.05"/>
-      </geometry>
-      <material name="black"/>
-    </visual>
-    -->
-    <xacro:def_inertial mass="0.1"/>
-  </link>
+  <joint name="base_link_to_arm" type="fixed">
+    <parent link="base_link"/>
+    <child link="joint1"/>
+    <origin xyz="-0.03 0.0 0.087" rpy="0 0 0"/>
+  </joint>
 
-  <link name="right_front_wheel">
-    <!--
-    <visual>
-      <origin rpy="1.57075 0 0" xyz="0 0 0"/>
-      <geometry>
-        <cylinder length="0.05" radius="0.05"/>
-      </geometry>
-      <material name="black"/>
-    </visual> -->
-    <xacro:def_inertial mass="0.1"/>
-  </link>
-
-  <link name="right_mid_wheel">
-    <!--
-    <visual>
-      <origin rpy="1.57075 0 0" xyz="0 0 0"/>
-      <geometry>
-        <cylinder length="0.05" radius="0.05"/>
-      </geometry>
-      <material name="black"/>
-    </visual> -->
-    <xacro:def_inertial mass="0.1"/>
-  </link>
-  
-  <link name="right_back_wheel">
-    <!--
-    <visual>
-      <origin rpy="1.57075 0 0" xyz="0 0 0"/>
-      <geometry>
-        <cylinder length="0.05" radius="0.05"/>
-      </geometry>
-      <material name="black"/>
-    </visual> -->
-    <xacro:def_inertial mass="0.1"/>
-  </link>
-  
   <joint name="joint2_to_joint1" type="revolute">
     <axis xyz="0 0 1"/>
     <limit effort = "1000.0" lower = "-3.14" upper = "3.14159" velocity = "0"/>
@@ -246,7 +173,7 @@
     <child link="joint2"/>
     <origin xyz= "0 0 0.13156" rpy = "0 0 1.5708"/>  
   </joint>
-
+<!--
   <joint name="joint3_to_joint2" type="revolute">
     <axis xyz="0 0 1"/>
     <limit effort = "1000.0" lower = "-3.14" upper = "3.14159" velocity = "0"/>
@@ -286,60 +213,5 @@
     <child link="joint6_flange"/>
     <origin xyz= "0 0.0456 0" rpy = "-1.5708 0 0"/>  
   </joint>
-
-  <joint name="base_joint" type="fixed">
-    <parent link="base_footprint"/>
-    <child link="base_link"/>
-    <origin xyz="0.0 0.0 0.08" rpy="0 0 0"/>
-  </joint>
-  
-  <joint name="base_link_to_arm" type="fixed">
-    <parent link="base_link"/>
-    <child link="joint1"/>
-    <origin xyz="-0.03 0.0 0.087" rpy="0 0 0"/>
-  </joint>
-
-  <joint name="left_front_wheel_joint" type="continuous">
-    <axis rpy="0 0 0" xyz="0 1 0"/>
-    <parent link="base_link"/>
-    <child link="left_front_wheel"/>
-    <origin rpy="0 0 0" xyz="0.12 0.09 -0.03"/>
-  </joint>
-
-  <joint name="left_mid_wheel_joint" type="continuous">
-    <axis rpy="0 0 0" xyz="0 1 0"/>
-    <parent link="base_link"/>
-    <child link="left_mid_wheel"/>
-    <origin rpy="0 0 0" xyz="0.0 0.09 -0.03"/>
-  </joint>
-  
-  <joint name="left_back_wheel_joint" type="continuous">
-    <axis rpy="0 0 0" xyz="0 1 0"/>
-    <parent link="base_link"/>
-    <child link="left_back_wheel"/>
-    <origin rpy="0 0 0" xyz="-0.12 0.09 -0.03"/>
-  </joint>
-  
-  <joint name="right_front_wheel_joint" type="continuous">
-    <axis rpy="0 0 0" xyz="0 1 0"/>
-    <parent link="base_link"/>
-    <child link="right_front_wheel"/>
-    <origin rpy="0 0 0" xyz="0.12 -0.09 -0.03"/>
-  </joint>
-
-  <joint name="right_mid_wheel_joint" type="continuous">
-    <axis rpy="0 0 0" xyz="0 1 0"/>
-    <parent link="base_link"/>
-    <child link="right_mid_wheel"/>
-    <origin rpy="0 0 0" xyz="0.0 -0.09 -0.03"/>
-  </joint>
-  
-  <joint name="right_back_wheel_joint" type="continuous">
-    <axis rpy="0 0 0" xyz="0 1 0"/>
-    <parent link="base_link"/>
-    <child link="right_back_wheel"/>
-    <origin rpy="0 0 0" xyz="-0.12 -0.09 -0.03"/>
-  </joint>
-
-  
+-->
 </robot>
