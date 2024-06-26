@@ -21,7 +21,16 @@
     </inertial>
   </xacro:macro>
 
-  <!-- The joints are modelled as a cylinder, that encompasses the whole joint. -->
+  <xacro:macro name="track_inertial">
+    <inertial>
+      <mass value="0.8" />
+      <inertia 
+          ixx="0.01" ixy="0.0" ixz="0.0" 
+          iyy="0.07" iyz="0.0" 
+          izz="0.07"/>
+    </inertial>
+  </xacro:macro>
+  
   <link name="base_footprint"/>
   <link name="base_link">
     <visual>
@@ -38,7 +47,7 @@
 	<mesh filename="package://chimera_description/meshes/base_link_collision.stl"/>
       </geometry>
     </collision>
-    <xacro:box_inertial m="5.5" w="0.24" d="0.34" h="0.15"/>
+    <xacro:box_inertial m="4.0" w="0.24" d="0.34" h="0.15"/>
   </link>
 
   <link name="joint1">
@@ -57,6 +66,8 @@
     <xacro:box_inertial m="0.25" w="0.1" d="0.1" h="0.1"/>
   </link>
 
+  <!-- TODO: Adding all the other joints -->
+
   <link name="joint2">
     <visual>
       <geometry>
@@ -73,6 +84,7 @@
     <xacro:hcylinder_inertial m="0.1" r="0.025" h="0.087"/>
   </link>
 
+<!--
   <link name="joint3">
     <visual>
       <geometry>
@@ -152,14 +164,89 @@
     </collision>
     <xacro:hcylinder_inertial m="0.05" r="0.018" h="0.02"/>
   </link>
+  -->
 
+  <link name="left_track">
+    <visual>
+      <geometry>
+       <mesh filename="package://chimera_description/meshes/track.stl"/>
+      </geometry>
+      <origin xyz="0.125 0.042 -0.01" rpy="0 0 0"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry>
+       <mesh filename="package://chimera_description/meshes/track.stl"/>
+      </geometry>
+      <origin xyz="0.125 0.042 -0.01" rpy="0 0 0"/>
+    </collision>
+    <surface>
+      <friction>
+        <ode>
+          <mu>0.65</mu>
+          <mu2>0.85</mu2>
+        </ode>
+      </friction>
+      <contact>
+        <ode/>
+      </contact>
+    </surface>
+    <max_contacts>20</max_contacts>
+    <xacro:track_inertial />
+  </link>
+  
+  <link name="right_track">
+    <visual>
+      <geometry>
+       <mesh filename="package://chimera_description/meshes/track.stl"/>
+      </geometry>
+      <origin xyz="0.125 -0.042 -0.01" rpy="0 0 0"/>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <geometry>
+       <mesh filename="package://chimera_description/meshes/track.stl"/>
+      </geometry>
+      <origin xyz="0.125 -0.042 -0.01" rpy="0 0 0"/>
+    </collision>
+    <surface>
+      <friction>
+        <ode>
+          <mu>0.65</mu>
+          <mu2>0.85</mu2>
+        </ode>
+      </friction>
+      <contact>
+        <ode/>
+      </contact>
+    </surface>
+    <max_contacts>20</max_contacts>
+    <xacro:track_inertial />
+  </link>
+  
+  <joint name="right_track_motor" type="revolute">
+    <parent link="base_link"/>
+    <child link="right_track"/>
+    <axis xyz="0 1 0"/>
+    <origin xyz="-0.125 -0.05 -0.022" rpy="0 0 0"/>
+    <limit effort="100" velocity="10.0" lower="0" upper="0"/>
+  </joint>
+
+  <joint name="left_track_motor" type="revolute">
+    <parent link="base_link"/>
+    <child link="left_track"/>
+    <axis xyz="0 1 0"/>
+    <origin xyz="-0.125 0.05 -0.022" rpy="0 0 0"/>
+    <limit effort="100" velocity="10.0" lower="0" upper="0"/>
+  </joint>
+  
   <joint name="base_joint" type="fixed">
     <parent link="base_footprint"/>
     <child link="base_link"/>
     <origin xyz="0.0 0.0 0.08" rpy="0 0 0"/>
   </joint>
 
-  <joint name="base_link_to_arm" type="fixed">
+  <joint name="arm_to_baselink" type="fixed">
     <parent link="base_link"/>
     <child link="joint1"/>
     <origin xyz="-0.03 0.0 0.087" rpy="0 0 0"/>
@@ -173,6 +260,7 @@
     <origin xyz= "0 0 0.13156" rpy = "0 0 1.5708"/>  
   </joint>
 
+  <!--
   <joint name="joint3_to_joint2" type="revolute">
     <axis xyz="0 0 1"/>
     <limit effort = "1000.0" lower = "-3.14" upper = "3.14159" velocity = "0"/>
@@ -212,5 +300,5 @@
     <child link="joint6_flange"/>
     <origin xyz= "0 0.0456 0" rpy = "-1.5708 0 0"/>  
   </joint>
-
+  -->
 </robot>
