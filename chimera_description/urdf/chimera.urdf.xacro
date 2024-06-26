@@ -333,17 +333,15 @@
       <right_track>right_track</right_track>
       <track_mu>0.65</track_mu>
       <track_mu2>0.85</track_mu2>
-      <tracks_separation>0.14</tracks_separation>
+      <tracks_separation>0.19</tracks_separation>
       <robot_namespace>chimera</robot_namespace>
     </plugin>
 
     <plugin name='tracked_vehicle_interface' filename='libgazebo_ros_tracked_vehicle_interface.so'>
       <commandROSTopic>/chimera/cmd_vel</commandROSTopic>
       <commandIGNTopic>~/chimera/cmd_vel_twist</commandIGNTopic>
-      
       <robotBaseFrame>base_link</robotBaseFrame>
-      
-      <tracks_separation>0.14</tracks_separation>
+      <tracks_separation>0.19</tracks_separation>
       <publishOdomTF>false</publishOdomTF>
     </plugin>
   </gazebo>
