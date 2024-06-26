@@ -5,11 +5,13 @@
   <arg name="gui" default="true"/>
   <arg name="headless" default="false"/>
   <arg name="debug" default="false"/>
+  <arg name="verbose" default="true"/>
   <arg name="rvizconfig" default="$(find chimera_description)/rviz/urdf.rviz" />
 
   <!-- TODO: Change this to a world full of rows of tomato plants -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="debug" value="$(arg debug)" />
+    <arg name="verbose" value="$(arg verbose)" />
     <arg name="gui" value="$(arg gui)" />
     <arg name="paused" value="$(arg paused)"/>
     <arg name="use_sim_time" value="$(arg use_sim_time)"/>
@@ -25,11 +27,11 @@
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" /> -->
   
   <!-- spawn the URDF in the sim -->
-  <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
+  <node name="chimera_model_spawner" pkg="gazebo_ros" type="spawn_model"
         args="-z 1.0 -unpause -urdf -model chimera -param robot_description" respawn="false" output="screen" />
 
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
-    <param name="publish_frequency" type="double" value="30.0" />	
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" ns="/chimera/tracks">
+    <param name="publish_frequency" type="double" value="30.0" />
   </node>	  
 
 </launch>

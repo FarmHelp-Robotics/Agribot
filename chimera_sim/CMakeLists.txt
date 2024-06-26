@@ -7,6 +7,9 @@ find_package(catkin REQUIRED COMPONENTS
   diff_drive_controller
   gazebo_ros
   gazebo_ros_control
+  ros_control
+  ros_controllers
+  effort_controllers
   joint_state_controller
   position_controllers
   robot_state_publisher
@@ -16,6 +19,6 @@ find_package(catkin REQUIRED COMPONENTS
 )
 catkin_package()
 
-install(DIRECTORY launch worlds models urdf
+install(DIRECTORY launch worlds models urdf config
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 )

@@ -30,8 +30,9 @@
           izz="0.07"/>
     </inertial>
   </xacro:macro>
-  
+  <!-- Heavily referenced from https://github.com/clubcapra/markhor -->
   <link name="base_footprint"/>
+  
   <link name="base_link">
     <visual>
       <geometry>
@@ -241,11 +242,11 @@
   </joint>
   
   <joint name="base_joint" type="fixed">
-    <parent link="base_footprint"/>
-    <child link="base_link"/>
-    <origin xyz="0.0 0.0 0.08" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="base_footprint"/>
+    <origin xyz="0.0 0.0 -0.0678" rpy="0 0 0"/>
   </joint>
-
+  
   <joint name="arm_to_baselink" type="fixed">
     <parent link="base_link"/>
     <child link="joint1"/>
@@ -301,4 +302,50 @@
     <origin xyz= "0 0.0456 0" rpy = "-1.5708 0 0"/>  
   </joint>
   -->
+  <transmission name="left_track_trans" type="SimpleTransmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="left_track_motor">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="left_track_motor_drive">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="right_track_trans" type="SimpleTransmission">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="right_track_motor">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="right_track_motor_drive">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace></robotNamespace>
+    </plugin>
+
+    <plugin filename="libSimpleTrackedVehiclePlugin.so" name="simple_tracked_vehicle">
+      <body>base_link</body>
+      <left_track>left_track</left_track>
+      <right_track>right_track</right_track>
+      <track_mu>0.65</track_mu>
+      <track_mu2>0.85</track_mu2>
+      <tracks_separation>0.14</tracks_separation>
+      <robot_namespace>chimera</robot_namespace>
+    </plugin>
+
+    <plugin name='tracked_vehicle_interface' filename='libgazebo_ros_tracked_vehicle_interface.so'>
+      <commandROSTopic>/chimera/cmd_vel</commandROSTopic>
+      <commandIGNTopic>~/chimera/cmd_vel_twist</commandIGNTopic>
+      
+      <robotBaseFrame>base_link</robotBaseFrame>
+      
+      <tracks_separation>0.14</tracks_separation>
+      <publishOdomTF>false</publishOdomTF>
+    </plugin>
+  </gazebo>
+  
 </robot>
