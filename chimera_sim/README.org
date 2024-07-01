@@ -1,2 +1,39 @@
 * chimera_sim
 Package for simulation and testing out the robot.
+
+* Dependencies
+For tracks to work, you'll need Gazebo from OSRF's repositories:
+#+BEGIN_SRC bash
+  sudo apt install -y wget
+  sudo echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list
+  wget https://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
+  sudo apt update
+  # this should show an update for Gazebo and related packages
+  sudo apt upgrade -y
+#+END_SRC
+  
+For getting cmd_vel topic from ROS through to Gazebo, the [[https://github.com/lprobsth/gazebo_ros_tracked_vehicle_interface][gazebo_ros_tracked_vehcile_interface]] plugin by lprobsth is required.
+To do that, clone it into /src and then ensure dependencies are installed, and catkin_make away:
+
+#+BEGIN_SRC bash
+  cd /path/to/agribot_ws/src && git clone https://github.com/lprobsth/gazebo_ros_tracked_vehicle_interface.git
+  cd /path/to/agribot_ws/
+
+  rosdep install --from-paths src --ignore-src -r -y
+  catkin_make
+#+END_SRC
+* Running
+Ensure you've got teleop-twist-keyboard package installed.
+
+#+BEGIN_SRC bash 
+  rosrun teleop_twist_keyboard teleop_twist_keyboard.py cmd_vel:=/chimera/cmd_vel
+#+END_SRC
+
+* TODO Note on Accuracy
+WIP to make it as physically accurate as possible. As off now, the weights are guesses.
+
+* Acknowledgments
+- https://github.com/elephantrobotics/mycobot_ros/pull/47/files#diff-376dbc4a3acb2831ff5adea9612541636ce126703a5f9477713e5dd388a4e196, is what was referenced for some of the inertial things
+  The formulae moments of inertia for simple shapes can be found here: https://en.wikipedia.org/wiki/List_of_moments_of_inertia#List_of_3D_inertia_tensors
+- Integrated the tracks was referenced from https://github.com/clubcapra/markhor which was found through https://github.com/gazebosim/gazebo-classic/issues/2910
+- Elephant Robotics's [[https://github.com/elephantrobotics/mycobot_ros][mycobot]] project for the starting point of the arm urdfs, and Yahboom's [[https://github.com/YahboomTechnology/Transbot_Jetson][Transbot Jetson]] for the starting point for the moving base
