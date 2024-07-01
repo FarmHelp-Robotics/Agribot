@@ -1,0 +1,130 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <xacro:macro name="tracks">
+    <xacro:macro name="track_inertial">
+      <inertial>
+	<mass value="0.8" />
+	<inertia 
+            ixx="0.01" ixy="0.0" ixz="0.0" 
+            iyy="0.07" iyz="0.0"
+            izz="0.07"/>
+      </inertial>
+    </xacro:macro>
+
+    <link name="left_track">
+      <visual>
+	<geometry>
+	  <mesh filename="package://chimera_description/meshes/track.stl"/>
+	</geometry>
+	<origin xyz="0.125 0.042 -0.01" rpy="0 0 0"/>
+	<material name="grey"/>
+      </visual>
+      <collision>
+	<geometry>
+	  <mesh filename="package://chimera_description/meshes/track.stl"/>
+	</geometry>
+	<origin xyz="0.125 0.042 -0.01" rpy="0 0 0"/>
+      </collision>
+      <surface>
+	<friction>
+          <ode>
+            <mu>0.65</mu>
+            <mu2>0.85</mu2>
+          </ode>
+	</friction>
+	<contact>
+          <ode/>
+	</contact>
+      </surface>
+      <max_contacts>20</max_contacts>
+      <xacro:track_inertial />
+    </link>
+
+    <link name="right_track">
+      <visual>
+	<geometry>
+	  <mesh filename="package://chimera_description/meshes/track.stl"/>
+	</geometry>
+	<origin xyz="0.125 -0.042 -0.01" rpy="0 0 0"/>
+	<material name="grey"/>
+      </visual>
+      <collision>
+	<geometry>
+	  <mesh filename="package://chimera_description/meshes/track.stl"/>
+	</geometry>
+	<origin xyz="0.125 -0.042 -0.01" rpy="0 0 0"/>
+      </collision>
+      <surface>
+	<friction>
+          <ode>
+            <mu>0.65</mu>
+            <mu2>0.85</mu2>
+          </ode>
+	</friction>
+	<contact>
+          <ode/>
+	</contact>
+      </surface>
+      <max_contacts>20</max_contacts>
+      <xacro:track_inertial />
+    </link>
+    
+    <joint name="right_track_motor" type="revolute">
+      <parent link="base_link"/>
+      <child link="right_track"/>
+      <axis xyz="0 1 0"/>
+      <origin xyz="-0.125 -0.05 -0.022" rpy="0 0 0"/>
+      <limit effort="100" velocity="10.0" lower="0" upper="0"/>
+    </joint>
+
+    <joint name="left_track_motor" type="revolute">
+      <parent link="base_link"/>
+      <child link="left_track"/>
+      <axis xyz="0 1 0"/>
+      <origin xyz="-0.125 0.05 -0.022" rpy="0 0 0"/>
+      <limit effort="100" velocity="10.0" lower="0" upper="0"/>
+    </joint>
+
+    
+    <transmission name="left_track_trans" type="SimpleTransmission">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="left_track_motor">
+	<hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="left_track_motor_drive">
+	<mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <transmission name="right_track_trans" type="SimpleTransmission">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="right_track_motor">
+	<hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="right_track_motor_drive">
+	<mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+
+    <gazebo>
+      <plugin filename="libSimpleTrackedVehiclePlugin.so" name="simple_tracked_vehicle">
+	<body>base_link</body>
+	<left_track>left_track</left_track>
+	<right_track>right_track</right_track>
+	<track_mu>0.65</track_mu>
+	<track_mu2>0.85</track_mu2>
+	<tracks_separation>0.19</tracks_separation>
+	<robot_namespace>chimera</robot_namespace>
+      </plugin>
+
+      <plugin name='tracked_vehicle_interface' filename='libgazebo_ros_tracked_vehicle_interface.so'>
+	<commandROSTopic>/chimera/cmd_vel</commandROSTopic>
+	<commandIGNTopic>~/chimera/cmd_vel_twist</commandIGNTopic>
+	<robotBaseFrame>base_link</robotBaseFrame>
+	<tracks_separation>0.19</tracks_separation>
+	<publishOdomTF>false</publishOdomTF>
+      </plugin>
+    </gazebo>
+
+  </xacro:macro>
+</robot>

@@ -30,7 +30,7 @@
   <node name="chimera_model_spawner" pkg="gazebo_ros" type="spawn_model"
         args="-z 1.0 -unpause -urdf -model chimera -param robot_description" respawn="false" output="screen" />
 
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" ns="/chimera/tracks">
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
     <param name="publish_frequency" type="double" value="30.0" />
   </node>	  
 
