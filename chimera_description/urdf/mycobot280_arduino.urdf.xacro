@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <xacro:include filename="$(find chimera_description)/urdf/inertial.xacro"/>  
-
+  <xacro:include filename="$(find chimera_description)/urdf/inertial.xacro"/>
+  <xacro:include filename="$(find chimera_description)/urdf/gripper.urdf.xacro"/>  
+  
   <xacro:macro name="my_cobot_arm" params="moving_base_link originxyz originrpy">
     <link name="link1">
       <visual>
@@ -115,6 +116,9 @@
       </collision>
       <xacro:hcylinder_inertial m="0.05" r="0.018" h="0.02"/>
     </link>
+
+    <xacro:gripper end_effector_link="end_effector_link"
+			originxyz="0.0 0.012 0.027" originrpy="1.570796 3.14159 0"/>
     
     <joint name="arm_to_baselink" type="fixed">
       <parent link="${moving_base_link}"/>
