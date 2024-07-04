@@ -4,7 +4,7 @@ Package for simulation and testing out the robot.
 * Dependencies
 For tracks to work, you'll need Gazebo from OSRF's repositories:
 #+BEGIN_SRC bash
-  sudo apt install -y wget
+  sudo apt update && apt install -y wget
   sudo echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list
   wget https://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
   sudo apt update
@@ -22,6 +22,7 @@ To do that, clone it into /src and then ensure dependencies are installed, and c
   rosdep install --from-paths src --ignore-src -r -y
   catkin_make
 #+END_SRC
+
 * Running
 Ensure you've got teleop-twist-keyboard package installed.
 
