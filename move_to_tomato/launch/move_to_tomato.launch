@@ -1,5 +1,19 @@
 <launch>
-  <!-- Start the tomato detector node -->
+     <!-- transbot driver module -->
+        <include file="$(find transbot_bringup)/launch/bringup.launch"/>
+        <include file="$(find realsense2_camera)/launch/rs_camera.launch"/>
+        
+        <include file="$(find transbot_nav)/launch/library/depthimage_to_laserscan.launch">
+            <arg name="scan_topic" default="scan"/>
+        </include>
+        
+        <!-- Camera's coordinate system-->
+        <node pkg="tf" type="static_transform_publisher" name="base_link_to_camera"
+              args="0.0484, 0, 0.268 0 0 0  /base_link /camera_link  30"/>
+        <node pkg="tf" type="static_transform_publisher" name="base_link_to_laser"
+              args=" 0.0484, 0, 0.268 0 0 0  /base_link /laser  30"/>
+      <!-- Start the tomato detector node -->
+      
   <node name="tomato_detector" pkg="detect_tomato" type="tomato_detector.py" output="screen">
     <param name="image_topic" value="/camera/rgb/image_raw" />
   </node>

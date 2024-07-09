@@ -10,7 +10,7 @@ from vision_msgs.msg import BoundingBox2D
 class TomatoDetector:
     def __init__(self):
         self.bridge = CvBridge()
-        image_topic = rospy.get_param('~image_topic', '/camera/rgb/image_raw')
+        image_topic = rospy.get_param('~image_topic', '/camera/color/image_raw')
         self.image_sub = rospy.Subscriber(image_topic, Image, self.image_callback)
         self.detection_pub = rospy.Publisher("/tomato_detection", BoundingBox2D, queue_size=10)
 
