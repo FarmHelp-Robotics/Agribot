@@ -8,15 +8,18 @@ For tracks to work, you'll need Gazebo from OSRF's repositories:
   sudo echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list
   wget https://packages.osrfoundation.org/gazebo.key -O - | sudo apt-key add -
   sudo apt update
-  # this should show an update for Gazebo and related packages
+  # should show an update for Gazebo and related packages
   sudo apt upgrade -y
 #+END_SRC
   
-For getting cmd_vel topic from ROS through to Gazebo, the [[https://github.com/lprobsth/gazebo_ros_tracked_vehicle_interface][gazebo_ros_tracked_vehcile_interface]] plugin by lprobsth is required.
-To do that, clone it into /src and then ensure dependencies are installed, and catkin_make away:
+For getting cmd_vel topic from ROS through to Gazebo, the [[https://github.com/lprobsth/gazebo_ros_tracked_vehicle_interface][gazebo_ros_tracked_vehcile_interface]] plugin by lprobsth is required. For the end_effector, there is a mimic joint from [[roboticsgroup_upatras_gazebo_plugins]] plugin collection to model the fact that the fingers are actuated together.
+
+For all this to work well, clone all these into /src and then ensure dependencies are installed, and catkin_make away:
 
 #+BEGIN_SRC bash
-  cd /path/to/agribot_ws/src && git clone https://github.com/lprobsth/gazebo_ros_tracked_vehicle_interface.git
+  cd /path/to/agribot_ws/src
+  git clone https://github.com/lprobsth/gazebo_ros_tracked_vehicle_interface.git
+  git clone https://github.com/roboticsgroup/roboticsgroup_upatras_gazebo_plugins.git
   cd /path/to/agribot_ws/
 
   rosdep install --from-paths src --ignore-src -r -y
@@ -24,10 +27,23 @@ To do that, clone it into /src and then ensure dependencies are installed, and c
 #+END_SRC
 
 * Running
-Ensure you've got teleop-twist-keyboard package installed.
+To launch the simulation and controllers:
+#+BEGIN_SRC bash 
+  rosrun chimera_sim chimera.launch
+#+END_SRC
 
+Ensure you've got teleop-twist-keyboard package installed to control the robot.
 #+BEGIN_SRC bash 
   rosrun teleop_twist_keyboard teleop_twist_keyboard.py cmd_vel:=/chimera/cmd_vel
+#+END_SRC
+
+In a terminal, try sending commands to the position controllers:
+#+BEGIN_SRC bash
+  rostopic list
+  # should show a bunch of position controllers
+
+  # use something like this to play around with the joints
+  rostopic pub -1 /joint21_position_controller/command std_msgs/Float64 "data: 3.14"
 #+END_SRC
 
 * TODO Note on Accuracy
