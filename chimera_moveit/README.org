@@ -1,1 +1,28 @@
 * chimera_moveit
+A package that integrates the MoveIt stack with the Chimera.
+
+* Running
+Might have to launch the gazebo.launch multiple times
+
+#+BEGIN_SRC bash
+  roslaunch chimera_moveit gazebo.launch
+  # then, after it's up, launch
+  roslaunch chimera_moveit moveit.launch
+#+END_SRC
+
+* Screenshots
+#+BEGIN_HTML
+<img src="home.png"/>
+#+END_HTML
+
+#+BEGIN_HTML
+<img src="planning.png"/>
+#+END_HTML
+
+#+BEGIN_HTML
+<img src="movement.png"/>
+#+END_HTML
+
+* TODO TODO
+
+** TODO Tuned PID values
