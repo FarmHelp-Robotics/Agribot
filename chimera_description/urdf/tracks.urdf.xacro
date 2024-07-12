@@ -107,7 +107,7 @@
 
     <gazebo>
       <plugin name="simple_tracked_vehicle" filename="libSimpleTrackedVehiclePlugin.so">
-	<body>base_link</body>
+	<body>base_footprint</body>
 	<left_track>left_track</left_track>
 	<right_track>right_track</right_track>
 	<track_mu>0.65</track_mu>

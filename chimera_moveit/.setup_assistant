@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: chimera_description
+    relative_path: urdf/chimera.urdf.xacro
+    xacro_args: ""
+  SRDF:
+    relative_path: config/chimera.srdf
+  CONFIG:
+    author_name: Nidhish (ru2saig)
+    author_email: develruusaig@gmail.com
+    generated_timestamp: 1720687346

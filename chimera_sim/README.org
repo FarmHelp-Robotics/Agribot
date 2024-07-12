@@ -21,7 +21,7 @@ For all this to work well, clone all these into /src and then ensure dependencie
   git clone https://github.com/lprobsth/gazebo_ros_tracked_vehicle_interface.git
   cd /path/to/agribot_ws/
 
-  apt install roboticsgroup-upatras-gazebo-plugins
+  apt install ros-melodic-roboticsgroup-upatras-gazebo-plugins
   rosdep install --from-paths src --ignore-src -r -y
   catkin_make
 #+END_SRC
