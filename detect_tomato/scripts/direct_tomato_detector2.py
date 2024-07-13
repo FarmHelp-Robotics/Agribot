@@ -1,17 +1,21 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import rospy
+import rospkg
 import cv2
 import numpy as np
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
 from vision_msgs.msg import BoundingBox2D
 import torch
+import os
+import onnxruntime as ort
 
 class TomatoDetector:
     def __init__(self):
         self.bridge = CvBridge()
-        self.model = torch.load('best_yolov8n_leaf.pt')
+        self.ort_session =  ort.InferenceSession(os.path.join(rospkg.RosPack().get_path("detetect_tomato"), "models/best_yolov8n_leaf.onnx"), providers=["CUDAExecutionProvider"])
+        self.model = torch.load(os.path.join(rospkg.RosPack().get_path("detect_tomato"), "models/best_yolov8n_leaf.pt"))
         image_topic = rospy.get_param('~image_topic', '/camera/rgb/image_raw')
         self.image_sub = rospy.Subscriber(image_topic, Image, self.image_callback)
         self.detection_pub = rospy.Publisher("/tomato_detection", BoundingBox2D, queue_size=10)

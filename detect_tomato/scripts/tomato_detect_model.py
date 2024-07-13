@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/bin/env python2
 
 import rospy
 import cv2
@@ -12,10 +12,11 @@ from vision_msgs.msg import BoundingBox2D
 class TomatoDetector:
     def __init__(self):
         self.bridge = CvBridge()
-        image_topic = rospy.get_param('~image_topic', '/camera/rgb/image_raw')
+        image_topic = rospy.get_param('~image_topic', '/camera/color/image_raw')
         self.image_sub = rospy.Subscriber(image_topic, Image, self.image_callback)
         self.detection_pub = rospy.Publisher("/tomato_detection", BoundingBox2D, queue_size=10)
-        self.api_url = rospy.get_param('~api_url', 'http://0.0.0.0:8080/video_feed')
+        print("bro")
+        self.api_url = rospy.get_param('~api_url', 'http://172.24.187.115:8080/video_feed')
 
     def image_callback(self, data):
         try:
@@ -61,8 +62,8 @@ class TomatoDetector:
                 y1 = detection['y1']
                 x2 = detection['x2']
                 y2 = detection['y2']
-		w = x2-x1
-		h = y2-y1
+                w = x2-x1
+                h = y2-y1
 
                 # Calculate the center of the bounding box
                 center_x = x + w // 2
@@ -85,12 +86,15 @@ class TomatoDetector:
                 cv2.waitKey(1)
 
         else:
-            rospy.logerr(f"API request failed with status code: {response.status_code}")
+            #rospy.logerr(f"API request failed with status code: {response.status_code}")
+            print(response.status_code)
 
 def main():
     rospy.init_node('tomato_detector', anonymous=True)
+    print("hi")
     td = TomatoDetector()
     try:
+        print("hi again")
         rospy.spin()
     except KeyboardInterrupt:
         rospy.loginfo("Shutting down")

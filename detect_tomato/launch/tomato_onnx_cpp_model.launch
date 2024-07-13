@@ -1,0 +1,13 @@
+<launch>
+    <!-- Argument to control whether to use the color camera -->
+    <arg name="colorCamera" default="true"/>
+    
+    <!-- Include the appropriate camera launch file based on the colorCamera argument -->
+    <include file="$(find realsense2_camera)/launch/rs_camera.launch" />
+    
+    <!-- Start the tomato detector node -->
+    <node name="tomato_detector" pkg="tomato_detector" type="tomato_detector_node" output="screen">
+        <param name="image_topic" value="/camera/color/image_raw" />
+    </node>
+</launch>
+
