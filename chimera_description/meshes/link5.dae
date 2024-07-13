@@ -41,7 +41,7 @@
   </library_effects>
   <library_images>
     <image id="joint4_png" name="joint4_png">
-      <init_from>joint4.png</init_from>
+      <init_from>link4.png</init_from>
     </image>
   </library_images>
   <library_materials>

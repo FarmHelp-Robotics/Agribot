@@ -20,17 +20,24 @@
 
   <param name="robot_description" command="$(find xacro)/xacro '$(find chimera_description)/urdf/chimera.urdf.xacro'"/>
 
-  <!--
-  <node if="$(arg gui)" name="joint_state_publisher" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
-  <node unless="$(arg gui)" name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
-  
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" /> -->
+  <!-- Load joint controller configurations from YAML file to parameter server -->
+  <rosparam file="$(find chimera_sim)/config/gazebo_controllers.yaml" command="load"/>
+
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+	output="screen" args="joint_state_controller
+					    joint21_position_controller 
+					    joint32_position_controller 
+					    joint43_position_controller 
+					    joint54_position_controller
+					    joint65_position_controller
+					    wrist_position_controller
+					    hand_position_controller"/>
   
   <!-- spawn the URDF in the sim -->
   <node name="chimera_model_spawner" pkg="gazebo_ros" type="spawn_model"
-        args="-z 1.0 -unpause -urdf -model chimera -param robot_description" respawn="false" output="screen" />
+        args="-z 0.1 -unpause -urdf -model chimera -param robot_description" respawn="false" output="screen" />
 
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
+  <node name="gazebo_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
     <param name="publish_frequency" type="double" value="30.0" />
   </node>	  
 

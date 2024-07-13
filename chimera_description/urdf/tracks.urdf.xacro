@@ -84,7 +84,6 @@
       <origin xyz="-0.125 0.05 -0.022" rpy="0 0 0"/>
       <limit effort="100" velocity="10.0" lower="0" upper="0"/>
     </joint>
-
     
     <transmission name="left_track_trans" type="SimpleTransmission">
       <type>transmission_interface/SimpleTransmission</type>
@@ -107,7 +106,7 @@
     </transmission>
 
     <gazebo>
-      <plugin filename="libSimpleTrackedVehiclePlugin.so" name="simple_tracked_vehicle">
+      <plugin name="simple_tracked_vehicle" filename="libSimpleTrackedVehiclePlugin.so">
 	<body>base_link</body>
 	<left_track>left_track</left_track>
 	<right_track>right_track</right_track>
@@ -117,7 +116,7 @@
 	<robot_namespace>chimera</robot_namespace>
       </plugin>
 
-      <plugin name='tracked_vehicle_interface' filename='libgazebo_ros_tracked_vehicle_interface.so'>
+      <plugin name="tracked_vehicle_interface" filename="libgazebo_ros_tracked_vehicle_interface.so">
 	<commandROSTopic>/chimera/cmd_vel</commandROSTopic>
 	<commandIGNTopic>~/chimera/cmd_vel_twist</commandIGNTopic>
 	<robotBaseFrame>base_link</robotBaseFrame>
