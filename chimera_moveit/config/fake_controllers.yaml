@@ -1,0 +1,17 @@
+controller_list:
+  - name: fake_mycobot_arm_controller
+    type: $(arg fake_execution_type)
+    joints:
+      - joint21
+      - joint32
+      - joint43
+      - joint54
+      - joint65
+      - wrist_joint
+  - name: fake_gripper_controller
+    type: $(arg fake_execution_type)
+    joints:
+      - right_finger_joint
+initial:  # Define initial robot poses.
+  - group: mycobot_arm
+    pose: home

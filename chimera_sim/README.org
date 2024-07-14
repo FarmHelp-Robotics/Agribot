@@ -2,7 +2,7 @@
 Package for simulation and testing out the robot.
 
 * Dependencies
-For tracks to work, you'll need Gazebo from OSRF's repositories:
+For tracks to work, you'll need Gazebo from OSRF's repositories, which has the necessary plugin for controlling and simulation of tracks.
 #+BEGIN_SRC bash
   sudo apt update && apt install -y wget
   sudo echo "deb http://packages.osrfoundation.org/gazebo/ubuntu-stable `lsb_release -cs` main" > /etc/apt/sources.list.d/gazebo-stable.list
@@ -19,9 +19,9 @@ For all this to work well, clone all these into /src and then ensure dependencie
 #+BEGIN_SRC bash
   cd /path/to/agribot_ws/src
   git clone https://github.com/lprobsth/gazebo_ros_tracked_vehicle_interface.git
-  git clone https://github.com/roboticsgroup/roboticsgroup_upatras_gazebo_plugins.git
   cd /path/to/agribot_ws/
 
+  apt install ros-melodic-roboticsgroup-upatras-gazebo-plugins
   rosdep install --from-paths src --ignore-src -r -y
   catkin_make
 #+END_SRC
