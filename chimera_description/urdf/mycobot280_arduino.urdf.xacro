@@ -99,6 +99,27 @@
       </collision>
       <xacro:hcylinder_inertial m="0.5" r="0.05" h="0.06"/>
     </link>
+    
+     <link name="camera_link">
+      <visual>
+        <geometry>
+          <box size="0.03 0.02 0.03"/> <!-- Dimensions of the camera box -->
+        </geometry>
+        <origin xyz="0 0 0.0" rpy="0 0 1.54"/> <!-- Position and orientation of the camera -->
+      </visual>
+      <collision>
+        <geometry>
+          <box size="0.03 0.02 0.03"/> <!-- Dimensions of the camera box -->
+        </geometry>
+        <origin xyz="0 0 0" rpy="0 0 1.54"/> <!-- Position and orientation of the camera -->
+      </collision>
+    </link>
+
+    <joint name="wrist_to_camera_joint" type="fixed">
+      <parent link="link6"/>
+      <child link="camera_link"/>
+      <origin xyz="0 0.025 0.04" rpy="0 0 1.54"/> <!-- Position and orientation of the camera relative to the wrist -->
+    </joint>
 
     <link name="wrist_link">
       <visual>
@@ -115,7 +136,7 @@
       </collision>
       <xacro:hcylinder_inertial m="0.1" r="0.02" h="0.005"/>
     </link>
-
+    
     <xacro:gripper wrist_link="wrist_link"
 		   originxyz="0.0 0.012 0.027" originrpy="1.570796 3.14159 0"/>
     
@@ -127,7 +148,7 @@
 
     <joint name="joint21" type="revolute">
       <axis xyz="0 0 1"/>
-      <limit effort = "1000.0" lower = "-3.14" upper = "3.14159" velocity = "0.1"/>
+      <limit effort = "1000.0" lower = "-2.8" upper = "2.8" velocity = "0.1"/>
       <parent link="link1"/>
       <child link="link2"/>
       <origin xyz= "0 0 0.13156" rpy = "0 0 1.5708"/>
@@ -136,7 +157,7 @@
 
     <joint name="joint32" type="revolute">
       <axis xyz="0 0 1"/>
-      <limit effort = "1000.0" lower = "-3.14" upper = "3.14159" velocity = "0.25"/>
+      <limit effort = "1000.0" lower = "-2.8" upper = "2.8" velocity = "0.25"/>
       <parent link="link2"/>
       <child link="link3"/>
       <origin xyz= "0 0  0" rpy = "0 1.5708 -1.5708"/>
@@ -145,7 +166,7 @@
 
     <joint name="joint43" type="revolute">
       <axis xyz=" 0 0 1"/>
-      <limit effort = "1000.0" lower = "-3.14" upper = "3.14159" velocity = "0.25"/>
+      <limit effort = "1000.0" lower = "-2.8" upper = "2.8" velocity = "0.25"/>
       <parent link="link3"/>
       <child link="link4"/>
       <origin xyz= "  -0.1104 0 0   " rpy = "0 0 0"/>
@@ -154,7 +175,7 @@
 
     <joint name="joint54" type="revolute">
       <axis xyz=" 0 0 1"/>
-      <limit effort = "1000.0" lower = "-3.14" upper = "3.14159" velocity = "0.25"/>
+      <limit effort = "1000.0" lower = "-2.8" upper = "2.8" velocity = "0.25"/>
       <parent link="link4"/>
       <child link="link5"/>
       <origin xyz= "-0.096 0 0.06462" rpy = "0 0 -1.5708"/>
@@ -163,7 +184,7 @@
 
     <joint name="joint65" type="revolute">
       <axis xyz="0 0 1"/>
-      <limit effort = "1000.0" lower = "-3.14" upper = "3.14159" velocity = "0.25"/>
+      <limit effort = "1000.0" lower = "-2.8" upper = "2.8" velocity = "0.25"/>
       <parent link="link5"/>
       <child link="link6"/>
       <origin xyz= "0 -0.07318 0" rpy = "1.5708 -1.5708 0"/>
@@ -172,7 +193,7 @@
 
     <joint name="wrist_joint" type="revolute">
       <axis xyz="0 0 1"/>
-      <limit effort = "1000.0" lower = "-3.14" upper = "3.14159" velocity = "0.25"/>
+      <limit effort = "1000.0" lower = "-3.05" upper = "3.05" velocity = "0.25"/>
       <parent link="link6"/>
       <child link="wrist_link"/>
       <origin xyz= "0 0.0456 0" rpy = "-1.5708 0 0"/>

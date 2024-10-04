@@ -1,0 +1,25 @@
+<launch>
+  <!-- Launch the robot model -->
+  <!-- Make sure you have the correct path to your URDF file -->
+  <arg name="gui" default="true" />
+  <arg name="rvizconfig" default="$(find chimera_description)/rviz/bringup_rviz.rviz" />
+
+  <param name="robot_description" command="$(find xacro)/xacro '$(find chimera_description)/urdf/chimera.urdf.xacro'" />
+
+  <node if="$(arg gui)" name="joint_state_publisher" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
+  <node unless="$(arg gui)" name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+  <!-- Launch the RealSense camera node -->
+  <!-- Make sure to adjust the parameters if needed -->
+  <!-- Intel camera node-->
+    <include file="$(find realsense2_camera)/launch/rs_camera.launch" />
+    <!-- Add any necessary parameters or remappings here -->
+
+  <!-- Optionally, launch RViz to visualize the robot and camera feed -->
+  <!-- Ensure RViz is configured to subscribe to the correct topics -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true">
+    
+  </node>
+</launch>
+
