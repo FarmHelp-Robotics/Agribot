@@ -12,7 +12,7 @@ from geometry_msgs.msg import Pose
 from std_msgs.msg import Float64MultiArray
 import message_filters
 import warnings
-
+from Transbot_Lib import Transbot
 red_pose = []
 re = None
 xyz = []
@@ -46,10 +46,6 @@ class CobotMoveit:
         self._planning_frame = self._group.get_planning_frame()  # for arm 
         self._eef_link = self._group.get_end_effector_link()
         self._group_names = self._robot.get_group_names()
-        
-        # Publisher for joint angles
-        self.joint_pub = rospy.Publisher('/ik_angles', Float64MultiArray, queue_size=10)
-        self.joint_angles_msg = Float64MultiArray()
 
         rospy.loginfo(
             '\033[94m' + "Planning Group: {}".format(self._planning_frame) + '\033[0m')
@@ -77,6 +73,23 @@ class CobotMoveit:
                       "joint5: {}\n".format(math.degrees(list_joint_values[4])) +
                       "wrist_joint: {}\n".format(math.degrees(list_joint_values[5])) +
                       '\033[0m')
+                      
+                      
+    def go_to_predefined_ee_pose(self, arg_pose_name):
+        rospy.loginfo(
+            '\033[94m' + "Going to Pose: {}".format(arg_pose_name) + '\033[0m')
+        self._eef_group.set_named_target(arg_pose_name)
+        plan = self._eef_group.plan()
+        self._eef_group.go(wait=True)
+
+    # for going to predefined pose for arm group
+    def go_to_predefined_arm_pose(self, arg_pose_name):
+        rospy.loginfo(
+            '\033[94m' + "Going to Pose: {}".format(arg_pose_name) + '\033[0m')
+        self._group.set_named_target(arg_pose_name)
+        plan = self._group.plan()
+        self._group.go(wait=True)
+                  
 
     def go_to_pose_incrementally(self, target_pose, increment=0.08):
         current_pose = self._group.get_current_pose().pose
@@ -107,8 +120,7 @@ class CobotMoveit:
             # Send the current pose to MoveIt
             self._group.set_pose_target(current_pose)
             self._group.go(wait=True)
-            rospy.sleep(0.1)
-
+            
         rospy.loginfo('\033[94m' + ">>> Reached Target Pose:" + '\033[0m')
         rospy.loginfo(current_pose)
 
@@ -118,6 +130,10 @@ class CobotMoveit:
 
     def callback(self, r_data):
         global red_pose, re, quat_list, xyz
+        
+        # Transbot servo for right_finger_joint
+        self.bot = Transbot()
+        self.servo_id = 9  # ID of the current joint
         
         # Pose from the camera
         re = r_data
@@ -135,28 +151,22 @@ class CobotMoveit:
         target_pose.orientation.z = -5.30664007665e-05
         target_pose.orientation.w = 0.701766733321
         
-        # Open gripper
-        #self.go_to_predefined_ee_pose("open")
-        #rospy.sleep(1)
-
+        self.go_to_predefined_arm_pose("pose1")
+        rospy.sleep(3)
+        self.bot.set_uart_servo_angle(self.servo_id, 70)
+        rospy.sleep(3)
+        
         # Move to the target pose incrementally
         self.go_to_pose_incrementally(target_pose)
-
-        rospy.sleep(1)  # Adjust the sleep as needed
-
-        # Optionally close the gripper or perform other actions here
-        # self.go_to_predefined_ee_pose("close")
-
+        rospy.sleep(3)  # Adjust the sleep as needed
+        self.bot.set_uart_servo_angle(self.servo_id, 144)
+        rospy.sleep(3) 
 
 def main():
     cobot = CobotMoveit()
     
-    tomato_pose = message_filters.Subscriber("/tomato_pose", Pose)
-    clbk_pose = message_filters.ApproximateTimeSynchronizer([tomato_pose], queue_size=10, slop=0.5, allow_headerless=True)
-    clbk_pose.registerCallback(cobot.callback)
-
+    tomato_pose = rospy.Subscriber("/tomato_pose", Pose,cobot.callback)
     rospy.spin()
-
 
 if __name__ == '__main__':
     main()
