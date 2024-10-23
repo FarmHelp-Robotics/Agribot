@@ -15,7 +15,7 @@ import math
 
 # Joint names and offsets
 JOINT_NAMES = ['joint21', 'joint32', 'joint43', 'joint54', 'joint65', 'wrist_joint']
-JOINT_OFFSETS = {'joint21': 86.45, 'wrist_joint': -46.40}
+JOINT_OFFSETS = {'joint21': 86.45, 'wrist_joint': -90}
 
 class MyCobotController:
     def __init__(self):
@@ -71,4 +71,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
