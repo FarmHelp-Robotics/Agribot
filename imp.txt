@@ -1,0 +1,17 @@
+
+To work with Agribot u need to run command in ternima one after other otherwise system get stuck 
+
+run commnds in order (wait till the command get executed correctelly)
+
+roslaunch chimera_moveit_gripper demo.launch use_gui:=true
+
+run thses both commade if u want to work with real hardware othwewise skip 
+ rosrun chimera_movt_gripper 3_hardware_control.py 
+ rosrun chimera_moveit_gripper 4_gripper_gui_control.py
+ 
+it take around 10-15 sec to init so wait 
+rosrun chimera_moveit_gripper ik_slover.py
+
+ 
+
+
