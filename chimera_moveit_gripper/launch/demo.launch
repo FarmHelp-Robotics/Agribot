@@ -18,7 +18,7 @@
   <arg name="load_robot_description" default="true"/>
 
   <!-- Set execution mode for fake execution controllers -->
-  <arg name="fake_execution_type" default="interpolate" />
+  <arg name="fake_execution_type" default="last point" />
 
   <!--
   By default, hide joint_state_publisher's GUI
@@ -28,11 +28,8 @@
   It also provides a GUI to move the simulated robot around "manually".
   This corresponds to moving around the real robot without the use of MoveIt.
   -->
-  <arg name="use_gui" default="false" />
+  <arg name="use_gui" default="true" />
   <arg name="use_rviz" default="true" />
-
-  <!-- If needed, broadcast static tf for robot root -->
-
 
   <!-- We do not have a robot connected, so publish fake joint states -->
   <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" unless="$(arg use_gui)">
@@ -63,7 +60,7 @@
   </include>
   
   <!-- To get xyz cordinates -->
-    <node name="tomato_tracker" pkg="chimera_moveit_gripper" type="xyz_coord.py" output="screen" />
+    <node name="tomato_tracker" pkg="chimera_moveit_gripper" type="1_xyz_coord.py" output="screen" />
 
   <!-- If database loading was enabled, start mongodb as well -->
   <include file="$(find chimera_moveit_gripper)/launch/default_warehouse_db.launch" if="$(arg db)">
