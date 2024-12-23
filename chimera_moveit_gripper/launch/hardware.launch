@@ -1,0 +1,8 @@
+<launch>
+ 
+ <!-- to load hardware_controller-->
+ <node name="hardware_controller" pkg="chimera_moveit_gripper" type="3_hardware_control.py" output="screen" />
+ 
+ <node name="gui_controler" pkg="chimera_moveit_gripper" type="4_gripper_gui_control.py" output="screen" />
+ 
+</launch> 
