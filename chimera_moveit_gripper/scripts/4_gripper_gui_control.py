@@ -16,7 +16,7 @@ class GripperControlGUI:
         
         # Transbot servo for right_finger_joint
         self.bot = Transbot()
-        self.servo_id = 9  # ID of the current joint
+        self.servo_id = 7  # ID of the current joint id 9 
         
         # Set the window size
         self.root.geometry("200x350")
@@ -127,4 +127,3 @@ app = GripperControlGUI(root)
 
 # Run the Tkinter event loop
 root.mainloop()
-
