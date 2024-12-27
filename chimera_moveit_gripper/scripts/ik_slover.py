@@ -40,10 +40,10 @@ class CobotMoveit:
 
         rospy.loginfo("CobotMoveit initialized.")
 
-    def go_to_predefined_arm_pose(self, pose_name):
-        """Moves the arm to a predefined pose."""
-        rospy.loginfo("Going to predefined pose: {}",pose_name)
-        self._group.set_named_target(pose_name)
+    def go_to_predefined_arm_pose(self, arg_pose_name):
+        rospy.loginfo(
+            '\033[94m' + "Going to Pose: {}".format(arg_pose_name) + '\033[0m')
+        self._group.set_named_target(arg_pose_name)
         plan = self._group.plan()
         self._group.go(wait=True)
 
@@ -73,36 +73,57 @@ class CobotMoveit:
             if success:
                 rospy.loginfo('\033[92m' + "Successfully moved to the target pose." + '\033[0m')
                 rospy.sleep(3)
-                # After moving, perform gripper control
-                self.bot.set_uart_servo_angle(self.servo_id, 135)
-                rospy.sleep(2)
-                self._control_gripper(grip_mode=1, grip_value=2000)
-                rospy.sleep(1)
-                self._control_gripper(grip_mode=0, grip_value=0)
-                rospy.loginfo("Gripper values published.")
+                # Prompt user to decide whether to close the gripper
+                user_input = raw_input("Do you want to close the gripper? (y/n): ")
+
+                if user_input.lower() == 'y':
+                    # Close the gripper
+                    self.bot.set_uart_servo_angle(self.servo_id, 135)  # Gripper closing angle
+                    
+                    # sleep is imp so as to execute correctely 
+                    self._control_gripper(grip_mode=1, grip_value=2000)
+                    rospy.sleep(6)
+                    self._control_gripper(grip_mode=0, grip_value=0)
+                    rospy.sleep(2)
+                    # Move the robot arm to a predefined pose
+                    self.go_to_predefined_arm_pose("pose2")
+                    rospy.sleep(2)
+                    rospy.loginfo("Gripper closed, moving to pose2.")
+                    self.bot.set_uart_servo_angle(self.servo_id, 70)
+                    rospy.sleep(2)
+                    self.go_to_predefined_arm_pose("pose1")
+                    
+                else:
+                    # Go to predefined arm pose and break loop
+                    self.go_to_predefined_arm_pose("pose1")
+                    rospy.loginfo("Returning to home position.")
+              
             else:
                 rospy.loginfo('\033[91m' + "Execution failed. No valid motion plan was executed." + '\033[0m')  # Red text for failure
+
         else:
             rospy.loginfo('\033[91m' + "Plan generation failed. No valid plan was found." + '\033[0m')  # Red text for failure
 
     def callback(self, r_data):
         """Callback to update the target pose and trigger planning."""
         # Update target pose from incoming data
+        # NOTE:x is horizontal , y is front & back , z is vertical
         self.target_pose.position.x = r_data.position.x
-        self.target_pose.position.y = r_data.position.y
-        self.target_pose.position.z = r_data.position.z
+        self.target_pose.position.y = r_data.position.y - 0.065
+        self.target_pose.position.z = r_data.position.z 
         self.target_pose.orientation.x = -0.712406800344
         self.target_pose.orientation.y = -3.50805107418e-06
         self.target_pose.orientation.z = -5.30664007665e-05
         self.target_pose.orientation.w = 0.701766733321
 
+         
         # Set initial servo angle and publish gripper control
-        self.bot.set_uart_servo_angle(self.servo_id, 70)
+        #self.bot.set_uart_servo_angle(self.servo_id, 70)
         self._control_gripper(grip_mode=0, grip_value=0)
-        
+        self.go_to_predefined_arm_pose("pose1")
         # Ask the user whether to plan for the target pose
         self.ask_for_plan()
-
+ 
     def _control_gripper(self, grip_mode, grip_value):
         """Helper method to control the gripper."""
         self.msg.data = [grip_mode, grip_value, 0.0, 500.0]
@@ -115,7 +136,7 @@ class CobotMoveit:
 
 def main():
     cobot = CobotMoveit()
-    
+  
     # Subscribe to the tomato pose topic and process it using the callback
     rospy.Subscriber("/tomato_pose", Pose, cobot.callback, queue_size=1)
     
@@ -124,4 +145,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
