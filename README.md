@@ -17,3 +17,7 @@ Agribot plucking tomato in test bed
 
 https://github.com/user-attachments/assets/05b39af2-fc81-404d-a115-3bdc4d79b47c
 
+
+https://github.com/user-attachments/assets/148897a3-5d52-45b9-a57e-114927ce68bf
+
+
