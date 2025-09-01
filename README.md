@@ -5,7 +5,7 @@
 [![YOLOv8](https://img.shields.io/badge/YOLO-v8-red)](https://github.com/ultralytics/ultralytics)  
 
 <p align="center">
-<img width="338" height="605" alt="Agribot" src="./Images/Agribot.png" />
+<img width="338" height="605" alt="Agribot" src="./Images/agribot.png" />
 <br>
 <em> Agribot </em>
 </p>
@@ -31,27 +31,7 @@ It integrates a tracked mobile base, a 6-DOF robotic arm, and a flexible gripper
 
 ---
 
-## System Workflow  
-
-<p align="center">
-<img width="538" height="805" alt="Agribot system workflow" src="./Images/agribot_onboard_workflow.png" />
-<br>
-<em> Agribot System Workflow </em>
-</p>
-
-
-1. Detect tomatoes with YOLOv8-nano (RGB-D input).  
-2. Convert image coords → 3D world coords.  
-3. TRAC-IK solver computes valid joint angles.  
-4. OMPL motion planner (RRT-Connect) generates safe path.  
-5. Arduino executes trajectory on the robotic arm.  
-6. Gripper plucks tomato & drops into collection basket.  
-
-**Avg harvest cycle**: 15–17 sec / tomato  
-
----
-
-## ⚙Hardware  
+## Hardware  
 
 - **Base**: Yahboom Transbot (tracked)  
 - **Arm**: MyCobot 280 Arduino, 6-DOF  
@@ -69,7 +49,28 @@ It integrates a tracked mobile base, a 6-DOF robotic arm, and a flexible gripper
 - **Perception**: YOLOv8-nano (PyTorch, Ultralytics), OpenCV, RealSense SDK  
 - **Planning**: TRAC-IK solver + OMPL (RRT-Connect)  
 - **Control**: Arduino IDE + ROS serial communication  
-- **Dataset Annotation**: Label Studio  
+- **Dataset Annotation**: Label Studio+ Custom data set collected from local horticulture officers.
+
+---
+
+## System Workflow  
+
+<p align="center">
+<img width="538" height="805" alt="Agribot system workflow" src="./Images/agribot_onboard_workflow.png" />
+<br>
+<em> Agribot System Workflow </em>
+</p>
+
+1. **Target Detection:** YOLOv5 processes RGB-D data from Intel RealSense, detecting tomatoes and outputting (x, y, z) positions in the camera frame. 
+2. **Coordinate Transformation:** 3D positions are converted to the robot base frame (`base_link`) via ROS TF and published to `tomato_pose`.  
+3. **Robot Setup:** Load URDF (links/joints), SRDF (collision/joint groups), TRAC-IK, and planner configurations.  
+4. **Control Initialization:** `move_group` interfaces with ROS parameters; `joint_state` and `robot_state_publisher` maintain real-time states.  
+5. **Inverse Kinematics:** TRAC-IK computes joint angles with improved accuracy and joint-limit handling.  
+6. **Motion Planning:** OMPL with RRT-Connect generates collision-free trajectories respecting joint and environmental constraints.  
+7. **Execution:** Trajectories sent via `joint_states` to Arduino controller, converted into servo commands for precise arm motion.  
+8. **Verification:** End-effector position is checked against the planned trajectory, monitoring collisions and joint limits.
+
+**Avg harvest cycle**: 15–17 sec / tomato  
 
 ---
 
