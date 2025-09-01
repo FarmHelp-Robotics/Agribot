@@ -4,8 +4,11 @@
 [![Jetson Nano](https://img.shields.io/badge/NVIDIA-Jetson%20Nano-green)](https://developer.nvidia.com/embedded/jetson-nano)  
 [![YOLOv8](https://img.shields.io/badge/YOLO-v8-red)](https://github.com/ultralytics/ultralytics)  
 
-<img width="338" height="605" alt="Screenshot from 2025-09-01 11-43-52" src="https://github.com/user-attachments/assets/7978684d-7193-474b-a2de-e062c64c2acf" />
-
+<p align="center">
+<img width="338" height="605" alt="Agribot" src="./Images/Agribot.png" />
+<br>
+<em> Agribot </em>
+</p>
 
 
 > Affordable agricultural robot designed to automate tomato harvesting in small & medium-scale farms in India.  
@@ -29,6 +32,12 @@ It integrates a tracked mobile base, a 6-DOF robotic arm, and a flexible gripper
 ---
 
 ## System Workflow  
+
+<p align="center">
+<img width="538" height="805" alt="Agribot system workflow" src="./Images/agribot_onboard_workflow.png" />
+<br>
+<em> Agribot System Workflow </em>
+</p>
 
 
 1. Detect tomatoes with YOLOv8-nano (RGB-D input).  
