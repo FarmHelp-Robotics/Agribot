@@ -79,19 +79,29 @@ It integrates a tracked mobile base, a 6-DOF robotic arm, and a flexible gripper
 - **Detection F1-Score**: 0.60 (ripe tomato detection)  
 - **Harvest Time**: 15–17 sec per cycle  
 - **Power Usage**: 9–11 W (Jetson Nano)  
-- **Inference Latency**: ~0.13 ms  
+- **Inference Latency**: ~0.13 ms
+
+## PREREQUISITUIES
+
+- Basic commands of ROS and set up a workspace
+- opencv 
 
 ## Installation
 ```bash
 # from root of the workspace
 mkdir -p agribot_ws/src && cd agribot_ws/src # Skip this if you already have a workspace
 
-git clone https://github.com/FarmHelp-Robotics/agribot_src
+https://github.com/FarmHelp-Robotics/Agribot.git
 rosdep install --from-paths src --ignore-src -r -y
 
 # enjoy! :D
 ```
 ## 
+
+## TO RUN : 
+Follow the LAUNCHGUIDE.md inside [Agribot/chimera_moveit_gripper](https://github.com/FarmHelp-Robotics/Agribot/tree/main/chimera_moveit_gripper)
+
+##
 
 ## Test Video of Agribot 
 Agribot plucking tomato in test bed
