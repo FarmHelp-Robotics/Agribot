@@ -55,8 +55,8 @@ This launches the AGRIBOT MoveIt environment and initializes the arm and gripper
 ```bash
 roslaunch ml_onboard ml_ik.launch
 ```
+This starts the onboard **machine-learning** node, along with **Transformation** node, which converts the detected tomato center into world coordinates used by the arm to plan ts motion.
 
-This starts the onboard **machine-learning** node, along with the **Transfrmation** node, which converts the detected tomato center into world coordinates used by the arm to plan its motion.
 ---
 
 ### Terminal 3 — Robot Hardware
@@ -64,7 +64,6 @@ This starts the onboard **machine-learning** node, along with the **Transfrmatio
 ```bash
 roslaunch chimera_moveit_gripper hardware.launch
 ```
-
 This initializes the robot hardware interface (track wheel along with arm servo) and establishes communication with the physical AGRIBOT.
 
 > **Important:** Ensure that the robot as well as MyCobot arm is powered ON and connected before launching the hardware interface.
