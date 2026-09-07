@@ -99,7 +99,7 @@ rosdep install --from-paths src --ignore-src -r -y
 ## 
 
 ## TO RUN : 
-Follow the LAUNCHGUIDE.md inside [Agribot/chimera_moveit_gripper](https://github.com/FarmHelp-Robotics/Agribot/tree/main/chimera_moveit_gripper)
+Follow the [LAUNCHGUIDE.md](https://github.com/FarmHelp-Robotics/Agribot/blob/main/chimera_moveit_gripper/LAUNCHGUIDE.md) inside [Agribot/chimera_moveit_gripper](https://github.com/FarmHelp-Robotics/Agribot/tree/main/chimera_moveit_gripper)
 
 ##
 
